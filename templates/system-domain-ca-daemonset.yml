@@ -1,0 +1,50 @@
+#@ load("@ytt:data", "data")
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: system-domain-ca
+  namespace: #@ data.values.namespace
+spec:
+  selector:
+    matchLabels:
+      name: system-domain-ca
+  updateStrategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        name: system-domain-ca
+    spec:
+      initContainers:
+      - name: create-docker-certs-dir
+        image: ubuntu:bionic
+        command:
+        - /bin/sh
+        - -c
+        - #@ "mkdir -p /etc/docker/certs.d/registry.{}".format(data.values.system_domain)
+        volumeMounts:
+        - name: host-docker
+          mountPath: /etc/docker
+        securityContext:
+          privileged: true
+      containers:
+      - name: system-domain-ca
+        image: ubuntu:bionic
+        command:
+        - /bin/sh
+        - -c
+        - #@ "cp /etc/eirini-internal-tls-certs/tls.ca /etc/docker/certs.d/registry.{}/ca.crt".format(data.values.system_domain)
+        volumeMounts:
+        - name: eirini-internal-tls-certs
+          mountPath: /etc/eirini-internal-tls-certs
+        securityContext:
+          privileged: true
+      volumes:
+      - name: host-docker
+        hostPath:
+          path: /etc/docker
+          type: Directory
+      - name: eirini-internal-tls-certs
+        secret:
+          secretName: eirini-internal-tls-certs
