@@ -34,10 +34,12 @@ spec:
         command:
         - /bin/sh
         - -c
-        - #@ "cp /etc/eirini-internal-tls-certs/tls.ca /etc/docker/certs.d/registry.{}/ca.crt".format(data.values.system_domain)
+        - #@ "cp /etc/eirini-internal-tls-certs/tls.ca /etc/docker/certs.d/registry.{}/ca.crt; sleep infinity".format(data.values.system_domain)
         volumeMounts:
         - name: eirini-internal-tls-certs
           mountPath: /etc/eirini-internal-tls-certs
+        - name: host-docker
+          mountPath: /etc/docker
         securityContext:
           privileged: true
       volumes:
