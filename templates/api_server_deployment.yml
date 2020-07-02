@@ -52,8 +52,10 @@ spec:
         - name: cf-api-local-worker
           image: #@ data.values.images.ccng
           imagePullPolicy: Always
-          command: ["/usr/local/bin/bundle"]
-          args: ["exec", "rake", "jobs:local"]
+          args: [ "local-worker" ]
+          env:
+            - name: CLOUD_CONTROLLER_NG_CONFIG
+              value: /config/cloud_controller_ng.yml
           volumeMounts:
           - name: cloud-controller-ng-yaml
             mountPath: /config/

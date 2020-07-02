@@ -5,8 +5,22 @@ kind: Sources
 sources:
   - imageRepo: cloudfoundry/cloud-controller-ng
     path: #@ data.values.src_dirs.ccng
+    pack:
+      build:
+        builder: gcr.io/paketo-buildpacks/builder:full-cf
+        buildpacks:
+          - gcr.io/paketo-community/ruby:latest
+          - paketo-buildpacks/procfile
   - imageRepo: #@ data.values.kbld.destination.ccng
     path: #@ data.values.src_dirs.ccng
+    pack:
+      build:
+        builder: gcr.io/paketo-buildpacks/builder:full-cf
+        buildpacks:
+          - gcr.io/paketo-community/ruby:latest
+          - paketo-buildpacks/procfile
+  - imageRepo: cloudfoundry/capi-nginx
+    path: #@ data.values.src_dirs.capi_nginx
   - imageRepo: cloudfoundry/capi-kpack-watcher
     path: #@ data.values.src_dirs.capi_kpack_watcher
   - imageRepo: #@ data.values.kbld.destination.capi_kpack_watcher
@@ -23,12 +37,17 @@ destinations:
     newImage: #@ data.values.kbld.destination.capi_kpack_watcher
   - imageRepo: #@ data.values.kbld.destination.capi_kpack_watcher
     newImage: #@ data.values.kbld.destination.capi_kpack_watcher
+  - imageRepo: cloudfoundry/capi-nginx
+    newImage: #@ data.values.kbld.destination.capi_nginx
+  - imageRepo: #@ data.values.kbld.destination.capi_nginx
+    newImage: #@ data.values.kbld.destination.capi_nginx
 ---
 apiVersion: kbld.k14s.io/v1alpha1
 kind: ImageKeys
 keys:
 - ccng
 - capi_kpack_watcher
+- nginx
 ---
 apiVersion: kbld.k14s.io/v1alpha1
 kind: Config

@@ -4,6 +4,8 @@ kbld:
   destination:
     ccng: ""
     capi_kpack_watcher: ""
+    capi_nginx: ""
 src_dirs:
   ccng: ""
   capi_kpack_watcher: ""
+  capi_nginx: ""

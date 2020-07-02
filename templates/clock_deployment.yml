@@ -23,15 +23,16 @@ spec:
       imagePullSecrets: #@ data.values.imagePullSecrets
       containers:
         - name: cf-api-clock
-          workingDir: "/cloud_controller_ng"
-          command: ["/usr/local/bin/bundle"]
-          args: ["exec", "rake", "clock:start"]
+          args: [ "clock" ]
           image: #@ data.values.images.ccng
           imagePullPolicy: Always
           readinessProbe:
             tcpSocket:
               port: 4446
             periodSeconds: 3
+          env:
+            - name: CLOUD_CONTROLLER_NG_CONFIG
+              value: /config/cloud_controller_ng.yml
           volumeMounts:
           - name: cloud-controller-ng-yaml
             mountPath: /config

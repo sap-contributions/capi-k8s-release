@@ -35,4 +35,7 @@ RUN cd nginx-1.16.1 && \
   make -j $(nproc) && \
   make -j $(nproc) install
 
+RUN groupadd -g 2000 vcap
+RUN useradd -r -u 2000 -g 2000 vcap
+
 CMD ["/usr/local/nginx/sbin/nginx", "-g", "daemon off;", "-c", "/etc/nginx/nginx.conf" ]
